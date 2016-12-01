@@ -1,5 +1,5 @@
 #Container base
-FROM node:argon
+FROM node:7.2-slim
 
 # Crea la carpeta donde va a estar la app
 RUN mkdir -p /usr/src/app
@@ -10,7 +10,8 @@ COPY package.json /usr/src/app/
 RUN npm install
 
 # copia los archivos
-COPY .js /usr/src/app
+COPY server.js /usr/src/app
+COPY services.js /usr/src/app
 
 EXPOSE 8080
 CMD [ "npm", "start" ]

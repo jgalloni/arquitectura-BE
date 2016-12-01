@@ -4,12 +4,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const services = require('./services');
 
-const Materias= require('./Materia');
-const Inscripcion = require('./Inscripcion');
-
-let inscripcion = new Inscripcion();
-
-
 // Constants
 const PORT = 8080;
 

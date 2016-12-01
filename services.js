@@ -1,6 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 var mongodb = require('mongodb');
-const urlDB = 'mongodb://localhost/fiuba';
+const urlDB = 'mongodb://mongo/fiuba';
 
 //generador de id
 const uuid = require('node-uuid');
@@ -12,7 +12,8 @@ module.exports = {
 
 		MongoClient.connect(urlDB,(err,db)=>{
 			if(err){
-				reject(err);
+				console.log(err);
+				Promise.reject(err);
 			}
 			db.collection('inscripcion').find({}).toArray((err,insc)=>{
 				db.collection('materias').find({}).toArray((err,materias)=>{
@@ -31,7 +32,7 @@ module.exports = {
 	buscarMateriaPorID : function(req,res){
 		MongoClient.connect(urlDB,(err,db)=>{
 			if(err){
-				reject(err);
+				Promise.reject(err);
 			}
 			db.collection('materias').findOne({codigo:req.params.codigoMateria},(err,materia)=>{
 				res.json(materia).end();
@@ -42,7 +43,7 @@ module.exports = {
 	obtenerInscripciones: function(req,res){
 		MongoClient.connect(urlDB,(err,db)=>{
 			if(err){
-				reject(err);
+				Promise.reject(err);
 			}
 			db.collection('inscripcion').find({}).toArray((err,insc)=>{
 				res.json(insc).end();
@@ -53,7 +54,7 @@ module.exports = {
 	buscarInscripcionPorID: function(req,res){
 		MongoClient.connect(urlDB,(err,db)=>{
 			if(err){
-				reject(err);
+				Promise.reject(err);
 			}
 			db.collection('inscripcion').findOne({codigo:req.params.codigoMateria},(err,materia)=>{
 				res.json(materia).end();
@@ -64,7 +65,7 @@ module.exports = {
 	inscribirse: function(req,res){
 		MongoClient.connect(urlDB,(err,db)=>{
 			if(err){
-				reject(err);
+				Promise.reject(err);
 			}
 			var curso = req.body.inscripcion;
 			db.collection('materias').find({codigo:req.params.codigoMateria}).toArray((err,materias)=>{
@@ -81,7 +82,7 @@ module.exports = {
 	desinscribirse: function(req,res){
 		MongoClient.connect(urlDB,(err,db)=>{
 			if(err){
-				reject(err);
+				Promise.reject(err);
 			}
 			var curso = req.params.id;
 			console.log(curso);

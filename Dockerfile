@@ -10,7 +10,7 @@ COPY package.json /usr/src/app/
 RUN npm install
 
 # copia los archivos
-COPY . /usr/src/app
+COPY .js /usr/src/app
 
 EXPOSE 8080
 CMD [ "npm", "start" ]

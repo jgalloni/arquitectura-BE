@@ -1,6 +1,14 @@
 'use strict';
 
 const express = require('express');
+const bodyParser = require('body-parser');
+const services = require('./services');
+
+const Materias= require('./Materia');
+const Inscripcion = require('./Inscripcion');
+
+let inscripcion = new Inscripcion();
+
 
 // Constants
 const PORT = 8080;
@@ -8,8 +16,14 @@ const PORT = 8080;
 // App
 const app = express();
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+app.use(bodyParser.json())
 
 //variable
+/*
 var materias = [
 	    {codigo:'75.01',nombre:'Algoritmos y programacion I', 
 	            cursos:[{docente:'carolo',horarios:[{dia:'lunes',desde:10,hasta:17}],cupos:[10,10]}],
@@ -22,51 +36,31 @@ var materias = [
 	];
 
 var inscripcion =[];
+*/
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Methods","DELETE, GET, HEAD, POST, PUT, OPTIONS, TRACE");
+  next();
+});
 
 //list materias
-app.get('/materias/', function (req, res) {
-	var result=materias.filter(
-		function(m){
-			return inscripcion.filter(
-				function(i){return i.codigo===m.codigo}
-			).length==0;
-		}
-	);
-  	res.json(result);
-});
+app.get('/materias/',services.obtenerMaterias);
 
-//list materias por codigo
-app.get('/materias/:codigo', function (req, res) {
-	var codigo=req.params.codigo;
-	var result=materias.filter(function(m){if(inscripcion.indexOf(m) !== -1) return true}).filter(function(m){return m.codigo===codigo});
-	console.log(result);
-  	res.json(result);
-});
+app.get('/materias/:codigoMateria',services.buscarMateriaPorID);
 
 //lista las inscripciones
-app.get('/inscrip/',function(req,res){
-	res.json(inscripcion);
-});
+app.get('/inscrip/',services.obtenerInscripciones);
+
 //get inscripcion por id
-app.get('/inscrip/:id',function(req,res){
-	var id=req.params.id;
-	var result= inscripcion.filter(function(m){return m.id===id});
-	res.json(inscripcion);
-});
+app.get('/inscrip/:id',services.buscarInscripcionPorID);
 
 //incribirse a un curso
-app.post('/inscrip/',function(req,res){
-	var curso = req.params.inscripcion;
-	if(inscripcion.filter(function(i){i.materia===curso.materia}).length==0){
-		inscripcion.add(curso);
-  		res.send(true);
-  	}else{
-  		res.send(false)
-  	}
-});
+app.post('/inscrip/',services.inscribirse);
 
 //desincribirse a un curso
-app.delete();
+app.delete('/inscrip/:id',services.desinscribirse);
 
 app.listen(PORT);
 console.log('Running on http://localhost:' + PORT);
